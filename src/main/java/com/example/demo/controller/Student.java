@@ -1,16 +1,37 @@
 package com.example.demo.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "T_STUDENT")
 public class Student {
 
+  @OneToOne(
+      mappedBy = "student",
+      cascade = CascadeType.ALL
+  )
+  private StudentProfile studentProfile;
+
+  public StudentProfile getStudentProfile() {
+    return studentProfile;
+  }
+
+  public void setStudentProfile(StudentProfile studentProfile) {
+    this.studentProfile = studentProfile;
+  }
+
   @Id
+  @GeneratedValue
   private Integer id;
   @Column(
       name = "c_fname",
@@ -18,6 +39,10 @@ public class Student {
   )
   private String firstname;
   private String lastname;
+
+  @Column(
+      unique = true
+  )
   private String email;
   private String age;
 
@@ -26,6 +51,23 @@ public class Student {
     this.lastname = lastname;
     this.email = email;
     this.age = age;
+  }
+
+  @ManyToOne
+  @JoinColumn(
+      name = "school_id"
+  )
+  @JsonBackReference
+  private School school;
+
+
+
+  public School getSchool() {
+    return school;
+  }
+
+  public void setSchool(School school) {
+    this.school = school;
   }
 
   public Student() {
